@@ -1,0 +1,74 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Body Background */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    min-height: 100vh;
+}
+
+/* Card Styling */
+.card {
+    background: #ffffff;
+    border-radius: 20px;
+    border: none;
+    transition: 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Header */
+.card h2 {
+    font-weight: 600;
+    color: #1e3c72;
+}
+
+/* Labels */
+label {
+    font-weight: 500;
+    color: #333;
+}
+
+/* Inputs */
+.form-control {
+    border-radius: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+}
+
+.form-control:focus {
+    border-color: #2a5298;
+    box-shadow: 0 0 5px rgba(42, 82, 152, 0.5);
+}
+
+/* Button */
+.btn-primary {
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #2a5298, #1e3c72);
+    transform: scale(1.02);
+}
+
+/* Prediction Text */
+#prediction {
+    font-size: 24px;
+    font-weight: bold;
+    color: #2a5298;
+}
+
+/* Spacing */
+.mt-50 {
+    margin-top: 50px;
+}
