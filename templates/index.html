@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Predictor - AI Powered</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="static/style.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+<div class="main-container">
+    <div class="prediction-card">
+        
+        <!-- Header Section -->
+        <header class="card-header">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="header-text">
+                    <h1 class="main-title">Car Price Predictor</h1>
+                    <p class="subtitle">AI Powered Prediction</p>
+                </div>
+            </div>
+            <p class="description">Enter your car details to get an accurate price estimate</p>
+        </header>
+
+        <!-- Form Section -->
+        <main class="form-section">
+            <form method="post" name="Modelform" id="predictionForm">
+
+                <!-- Company Selection -->
+                <div class="input-group">
+                    <label for="company" class="form-label">
+                        <i class="fas fa-building"></i>
+                        Select Company
+                    </label>
+                    <select class="form-input" id="company" name="company"
+                            onchange="load_car_models(this.id,'car_models')">
+                        {% for company in companies %}
+                        <option value="{{ company }}">{{ company }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Model Selection -->
+                <div class="input-group">
+                    <label for="car_models" class="form-label">
+                        <i class="fas fa-car-side"></i>
+                        Select Model
+                    </label>
+                    <select class="form-input" id="car_models" name="car_models"></select>
+                </div>
+
+                <!-- Year Selection -->
+                <div class="input-group">
+                    <label for="year" class="form-label">
+                        <i class="fas fa-calendar-alt"></i>
+                        Year of Purchase
+                    </label>
+                    <select class="form-input" id="year" name="year">
+                        {% for year in years %}
+                        <option value="{{ year }}">{{ year }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Fuel Type Selection -->
+                <div class="input-group">
+                    <label for="fuel_type" class="form-label">
+                        <i class="fas fa-gas-pump"></i>
+                        Fuel Type
+                    </label>
+                    <select class="form-input" id="fuel_type" name="fuel_type">
+                        {% for fuel in fuel_types %}
+                        <option value="{{ fuel }}">{{ fuel }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Kilometers Driven -->
+                <div class="input-group">
+                    <label for="kms_driven" class="form-label">
+                        <i class="fas fa-tachometer-alt"></i>
+                        Kilometers Driven
+                    </label>
+                    <input type="number" class="form-input" id="kms_driven" name="kms_driven"
+                           placeholder="Enter kilometers driven" min="0">
+                </div>
+
+                <!-- Predict Button -->
+                <div class="button-container">
+                    <button type="button" class="predict-btn" onclick="send_data()">
+                        <span class="btn-text">Predict Price</span>
+                        <i class="fas fa-chart-line btn-icon"></i>
+                    </button>
+                </div>
+
+            </form>
+        </main>
+
+        <!-- Result Section -->
+        <section class="result-section" id="resultSection">
+            <div class="result-card" id="resultCard">
+                <div class="result-header">
+                    <i class="fas fa-chart-line result-icon"></i>
+                    <h3 class="result-title">Estimated Price</h3>
+                </div>
+                <div class="result-amount" id="prediction">
+                    <span class="result-placeholder">Enter details to predict</span>
+                </div>
+            </div>
+        </section>
+
+    </div>
+</div>
+
+<script>
+
+function load_car_models(company_id,car_model_id)
+{
+    var company=document.getElementById(company_id);
+    var car_model= document.getElementById(car_model_id);
+
+    car_model.innerHTML="";
+
+    {% for company in companies %}
+        if( company.value == "{{ company }}")
+        {
+            {% for model in car_models %}
+                {% if company in model %}
+                    var newOption= document.createElement("option");
+                    newOption.value="{{ model }}";
+                    newOption.innerHTML="{{ model }}";
+                    car_model.options.add(newOption);
+                {% endif %}
+            {% endfor %}
+        }
+    {% endfor %}
+}
+
+function form_handler(event) {
+    event.preventDefault();
+}
+
+function send_data()
+{
+    document.querySelector('form').addEventListener("submit",form_handler);
+
+    var fd=new FormData(document.querySelector('form'));
+
+    var xhr= new XMLHttpRequest();
+
+    xhr.open('POST','/predict',true);
+
+    document.getElementById('prediction').innerHTML="⏳ Predicting...";
+
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState == XMLHttpRequest.DONE){
+            document.getElementById('prediction').innerHTML =
+                "💰 Estimated Price: ₹ " + xhr.responseText;
+        }
+    };
+
+    xhr.send(fd);
+}
+
+</script>
+
+</body>
+</html>
