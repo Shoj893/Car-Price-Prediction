@@ -57,6 +57,9 @@ def predict():
     except Exception as e:
         return f"Error: {str(e)}"
 
-
+@app.route("/health")
+def health():
+    return "OK", 200
+    
 if __name__ == "__main__":
     app.run(debug=True)  
